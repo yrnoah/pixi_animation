@@ -67,31 +67,31 @@ function setup() {
   catHitCount.position.set(45, 10);
   gameScene.addChild(catHitCount);
 
-  const hedgehogTexture = TextureCache["hedgehog.png"];
-  hedgehog = new Sprite(hedgehogTexture);
-  hedgehog.position.set(90, 5);
-  hedgehog.scale.set(.5, .5);
-  gameScene.addChild(hedgehog);
-
-  hedgehogHitCount = new PIXI.Text(
-    ": 0",
-    {font: "16px Futura", fill: "blue"}
-  );
-  hedgehogHitCount.position.set(125, 10);
-  gameScene.addChild(hedgehogHitCount);
-
-  const tigerTexture = TextureCache["tiger.png"];
-  tiger = new Sprite(tigerTexture);
-  tiger.position.set(170, 5);
-  tiger.scale.set(.5, .5);
-  gameScene.addChild(tiger);
-
-  tigerHitCount = new PIXI.Text(
-    ": 0",
-    {font: "16px Futura", fill: "blue"}
-  );
-  tigerHitCount.position.set(205, 10);
-  gameScene.addChild(tigerHitCount);
+  // const hedgehogTexture = TextureCache["hedgehog.png"];
+  // hedgehog = new Sprite(hedgehogTexture);
+  // hedgehog.position.set(90, 5);
+  // hedgehog.scale.set(.5, .5);
+  // gameScene.addChild(hedgehog);
+  //
+  // hedgehogHitCount = new PIXI.Text(
+  //   ": 0",
+  //   {font: "16px Futura", fill: "blue"}
+  // );
+  // hedgehogHitCount.position.set(125, 10);
+  // gameScene.addChild(hedgehogHitCount);
+  //
+  // const tigerTexture = TextureCache["tiger.png"];
+  // tiger = new Sprite(tigerTexture);
+  // tiger.position.set(170, 5);
+  // tiger.scale.set(.5, .5);
+  // gameScene.addChild(tiger);
+  //
+  // tigerHitCount = new PIXI.Text(
+  //   ": 0",
+  //   {font: "16px Futura", fill: "blue"}
+  // );
+  // tigerHitCount.position.set(205, 10);
+  // gameScene.addChild(tigerHitCount);
 
   id = resources[animalsImg].textures;
 
@@ -153,8 +153,9 @@ function setup() {
   gameOverScene.addChild(message);
 
   state = play;
-  setInterval(reduceHealth, 1000);
+  // setInterval(reduceHealth, 1000);
   Ticker.add(gameLoop);
+  Ticker.add(reduceHealth);
   Ticker.start();
 }
 
@@ -179,6 +180,7 @@ function end() {
   // message.visible = true;
   gameScene.visible = false;
   gameOverScene.visible = true;
+  setTimeout(Ticker.stop, 1000);
 }
 
 function contain(sprite, container) {
@@ -213,12 +215,15 @@ function randomInt(min, max) {
 
 function reduceHealth() {
   if (healthBar.outer.width <= 0) return;
-  healthBar.outer.width -= (128 / 10);
+  var barWidth = healthBar.width;
+  healthBar.outer.width -= ((barWidth / 10) / 60);
 }
 
 function onClick() {
   const c = catHitCount.text.split(" ");
   catHitCount.text = ': ' + (parseInt(c[1], 10) + 1);
+  this.speed = 0;
+  this.vy = 0;
   this.scale.x *= 1.25;
   this.scale.y *= 1.25;
   setTimeout((function () {
